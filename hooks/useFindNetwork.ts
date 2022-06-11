@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export const useFindNetwork = () => {
   const [network, setNetwork] = useState('');
 
-  useEffect(() => {
+  const handleFindNetwork = useCallback(() => {
     if (typeof window.klaytn !== 'undefined') {
       if (window.klaytn.networkVersion === 1001) {
         setNetwork('Baobab Test Network');
@@ -13,5 +13,9 @@ export const useFindNetwork = () => {
     }
   }, []);
 
-  return { network };
+  useEffect(() => {
+    handleFindNetwork();
+  }, [handleFindNetwork]);
+
+  return { network, handleFindNetwork };
 };

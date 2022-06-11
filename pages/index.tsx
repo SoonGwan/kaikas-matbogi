@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Caver from 'caver-js';
 import { useConnectKaikas } from '../hooks/useConnectKaikas';
 import { useFindNetwork } from '../hooks/useFindNetwork';
+import { useKlaytnEvent } from '../hooks/useKlaytnEvent';
 
 declare global {
   interface Window {
@@ -16,7 +17,10 @@ const Home: NextPage = () => {
   const caver = new Caver(klaytnObj);
 
   const { handleConnect, address, balance } = useConnectKaikas(caver);
-  const { network } = useFindNetwork();
+
+  const { network, handleFindNetwork } = useFindNetwork();
+
+  useKlaytnEvent({ handleFindNetwork, handleConnect });
 
   useEffect(() => {
     setKlayObj(window.klaytn);
