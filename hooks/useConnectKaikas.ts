@@ -1,12 +1,10 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { useHealthCheck } from './useHealthCheck';
-import { useKlaytnEvent } from './useKlaytnEvent';
 
 export const useConnectKaikas = (caver: any) => {
   const { isUnlocked } = useHealthCheck();
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState('');
-  // useKlaytnEvent(caver);
 
   const handleConnect = useCallback(async () => {
     if (isUnlocked) {
@@ -19,18 +17,6 @@ export const useConnectKaikas = (caver: any) => {
       setAddress(result[0]);
     }
   }, [caver.klay, caver.utils, isUnlocked]);
-
-  // useEffect(() => {
-  //   window.klaytn.on('accountsChanged', () => {
-  //     handleConnect();
-  //   });
-  // }, [handleConnect]);
-
-  // useEffect(() => {
-  //   window.klaytn.on('networkChanged', function () {
-  //     handleConnect();
-  //   });
-  // }, [handleConnect]);
 
   return { handleConnect, address, balance };
 };
