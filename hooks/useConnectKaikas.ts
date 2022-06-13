@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { AbstractCaver } from 'caver-js';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useHealthCheck } from './useHealthCheck';
 import { removeCookies, setCookies } from 'cookies-next';
 import { _addressAtom } from '../atom';
@@ -30,6 +30,10 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
     removeCookies('_key');
     setAddress('');
   }, []);
+
+  useEffect(() => {
+    setAddress(_user);
+  }, [_user]);
 
   return { handleConnect, address, balance, handleDisconnect };
 };
