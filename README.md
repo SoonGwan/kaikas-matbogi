@@ -1,3 +1,4 @@
 - (2022.06.09) : caverjs 를 활용한 `wallet public key`, `wallet klay balence`, `10^18 convert util` 공부.
 - (2022.06.10) : 기존에 막 만들었던 함수들을 재사용하기 쉽게 `custom hook`으로 관리 하도록 변경하였다.
 - (2022.06.11) : 사용자가 다른 지갑으로 변경하거나, 네트워크넷을 변경할 경우 해당 지갑 주소의 `data`를 가져올 수 있도록 `custom hook listener`를 추가하였다.
+- (2022.06.14) : 사용자가 카이카스 동의 모달을 누르고 나서 다음 행동을 할 수 있도록 작업. cookie를 이용하여 address를 가질 수 있도록 작성, 전역 state recoil을 추가하여 address를 상태값 관리 하도록 
