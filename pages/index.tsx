@@ -4,7 +4,8 @@ import Caver from 'caver-js';
 import { useConnectKaikas } from '../hooks/useConnectKaikas';
 import { useFindNetwork } from '../hooks/useFindNetwork';
 import { useKlaytnEvent } from '../hooks/useKlaytnEvent';
-import { getCookie } from 'cookies-next';
+import { checkCookies, getCookie } from 'cookies-next';
+import useFetchData from '../hooks/useFetchData';
 
 declare global {
   interface Window {
@@ -28,6 +29,8 @@ const Home: NextPage<Props> = ({ _user }) => {
 
   useKlaytnEvent({ handleFindNetwork, handleConnect });
 
+  const { data } = useFetchData();
+
   useEffect(() => {
     setKlayObj(window.klaytn);
   }, []);
@@ -41,14 +44,21 @@ const Home: NextPage<Props> = ({ _user }) => {
       <div>network : {network}</div>
       <div>key : {address}</div>
       <div>klay : {balance}개</div>
+
+      {data && data.map((data: any) => data.name)}
     </div>
   );
 };
 
 export default Home;
 
-export const getServerSideProps = ({ req, res }: any) => {
-  const cookie = getCookie('_key', { req, res });
+export const getServerSideProps = async ({ req, res }: any) => {
+  if (checkCookies('_key', { req, res })) {
+    const cookie = getCookie('_key', { req, res });
+    console.log(cookie);
 
-  return { props: { _user: cookie } };
+    return { props: { _user: cookie } };
+  }
+
+  return { props: { _user: null } };
 };
