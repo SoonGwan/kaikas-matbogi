@@ -1,11 +1,13 @@
 import type { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Caver from 'caver-js';
 import { useConnectKaikas } from '../hooks/useConnectKaikas';
 import { useFindNetwork } from '../hooks/useFindNetwork';
 import { useKlaytnEvent } from '../hooks/useKlaytnEvent';
 import { checkCookies, getCookie } from 'cookies-next';
 import useFetchData from '../hooks/useFetchData';
+import axios from 'axios';
+import abi from './cpb.json';
 
 declare global {
   interface Window {
@@ -22,12 +24,12 @@ const Home: NextPage<Props> = ({ _user }) => {
 
   const caver = new Caver(klaytnObj);
 
-  const { handleConnect, address, balance, handleDisconnect } =
+  const { handleConnect, address, balance, handleDisconnect, fetchMyNft } =
     useConnectKaikas(caver, _user);
 
   const { network, handleFindNetwork } = useFindNetwork();
 
-  useKlaytnEvent({ handleFindNetwork, handleConnect });
+  useKlaytnEvent({ handleFindNetwork, handleConnect, fetchMyNft });
 
   const { data } = useFetchData();
 
@@ -37,15 +39,24 @@ const Home: NextPage<Props> = ({ _user }) => {
 
   return (
     <div>
-      <button onClick={handleConnect}>CONNET KAIKAS</button>
+      <button
+        onClick={() => {
+          handleConnect();
+        }}
+      >
+        CONNET KAIKAS
+      </button>
       <button onClick={handleDisconnect}>DISCONNECT</button>
 
       <div>info</div>
       <div>network : {network}</div>
       <div>key : {address}</div>
       <div>klay : {balance}개</div>
+      {/*  */}
 
+      <span> META DATA </span>
       {data && data.map((data: any) => data.name)}
+      {/*  */}
     </div>
   );
 };

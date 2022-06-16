@@ -1,9 +1,11 @@
+import abi from './cpb.json';
 import { useRecoilState } from 'recoil';
 import { AbstractCaver } from 'caver-js';
 import { useCallback, useState, useEffect } from 'react';
 import { useHealthCheck } from './useHealthCheck';
 import { removeCookies, setCookies } from 'cookies-next';
 import { _addressAtom } from '../atom';
+import axios from 'axios';
 
 export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
   const { isUnlocked } = useHealthCheck();
@@ -26,6 +28,14 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
     });
   }, [_setAddress, caver.klay, caver.utils, isUnlocked]);
 
+  const fetchMyNft = useCallback(async (userAddress: string) => {
+    const data = await axios.post('api/transfer', {
+      body: { address: userAddress },
+    });
+
+    console.log(data.data.data);
+  }, []);
+
   const handleDisconnect = useCallback(() => {
     removeCookies('_key');
     setAddress('');
@@ -35,5 +45,10 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
     setAddress(_user);
   }, [_user]);
 
-  return { handleConnect, address, balance, handleDisconnect };
+  useEffect(() => {
+    console.log('address', address);
+    fetchMyNft(address);
+  }, [address, fetchMyNft]);
+
+  return { handleConnect, address, balance, handleDisconnect, fetchMyNft };
 };

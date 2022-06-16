@@ -1,14 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import Caver from 'caver-js';
 import abi from './cpb.json';
+import Caver from 'caver-js';
 
-type Data = {
-  data: any;
-};
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { body } = req.body;
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  console.log('req.body', body);
   const caver = new Caver('https://api.baobab.klaytn.net:8651/');
 
   const contract = new caver.klay.Contract(
@@ -16,13 +15,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     process.env.NEXT_PUBLIC_ADDRESS
   );
 
-  const totalSupply = await contract.methods.totalSupply().call();
+  const balance = await contract.methods.balanceOf(body.address).call();
+  console.log(balance);
 
-  let info = [] as any;
   let promises = [];
+  let info = [] as any;
 
-  for (let i = 1; i <= totalSupply; i++) {
-    const uri = await contract.methods.tokenURI(i).call();
+  for (let i = 0; i < balance; i += 1) {
+    const id = await contract.methods
+      .tokenOfOwnerByIndex(body.address, i)
+      .call();
+    const uri = await contract.methods.tokenURI(id).call();
+    console.log(uri);
 
     promises.push(
       axios.get(uri).then((response) => {

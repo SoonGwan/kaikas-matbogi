@@ -3,20 +3,27 @@ import { useEffect } from 'react';
 type Props = {
   handleFindNetwork: () => void;
   handleConnect: () => void;
+  fetchMyNft: () => void;
 };
 
-export const useKlaytnEvent = ({ handleFindNetwork, handleConnect }: Props) => {
+export const useKlaytnEvent = ({
+  handleFindNetwork,
+  handleConnect,
+  fetchMyNft,
+}: Props) => {
   useEffect(() => {
     window.klaytn.on('accountsChanged', () => {
       handleFindNetwork();
       handleConnect();
+      // fetchMyNft();
     });
-  }, [handleConnect, handleFindNetwork]);
+  }, [fetchMyNft, handleConnect, handleFindNetwork]);
 
   useEffect(() => {
     window.klaytn.on('networkChanged', () => {
       handleFindNetwork();
       handleConnect();
+      // fetchMyNft();
     });
-  }, [handleConnect, handleFindNetwork]);
+  }, [fetchMyNft, handleConnect, handleFindNetwork]);
 };
