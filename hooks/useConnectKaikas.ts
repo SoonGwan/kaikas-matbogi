@@ -12,6 +12,7 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
   const [address, setAddress] = useState(_user);
   const [balance, setBalance] = useState('');
   const [_address, _setAddress] = useRecoilState(_addressAtom);
+  const [nftData, setNftData] = useState<any[]>([]);
 
   const handleConnect = useCallback(async () => {
     window.klaytn.enable().then(async () => {
@@ -33,7 +34,7 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
       body: { address: userAddress },
     });
 
-    console.log(data.data.data);
+    setNftData(data.data.data);
   }, []);
 
   const handleDisconnect = useCallback(() => {
@@ -50,5 +51,12 @@ export const useConnectKaikas = (caver: AbstractCaver, _user: string) => {
     fetchMyNft(address);
   }, [address, fetchMyNft]);
 
-  return { handleConnect, address, balance, handleDisconnect, fetchMyNft };
+  return {
+    handleConnect,
+    address,
+    balance,
+    handleDisconnect,
+    fetchMyNft,
+    nftData,
+  };
 };

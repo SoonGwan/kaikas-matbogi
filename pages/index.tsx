@@ -24,12 +24,12 @@ const Home: NextPage<Props> = ({ _user }) => {
 
   const caver = new Caver(klaytnObj);
 
-  const { handleConnect, address, balance, handleDisconnect, fetchMyNft } =
+  const { handleConnect, address, balance, handleDisconnect, nftData } =
     useConnectKaikas(caver, _user);
 
   const { network, handleFindNetwork } = useFindNetwork();
 
-  useKlaytnEvent({ handleFindNetwork, handleConnect, fetchMyNft });
+  useKlaytnEvent({ handleFindNetwork, handleConnect });
 
   const { data } = useFetchData();
 
@@ -57,6 +57,32 @@ const Home: NextPage<Props> = ({ _user }) => {
       <span> META DATA </span>
       {data && data.map((data: any) => data.name)}
       {/*  */}
+      <div>
+        <span>MY NFT DATA</span>
+
+        {nftData &&
+          nftData.map((data: any) => {
+            const { description, name, image } = data;
+            return (
+              <div key={name} className='itemWrapper'>
+                <img src={image} alt='image' className='item' />
+                <div>{description}</div>
+                <div>{name}</div>
+              </div>
+            );
+          })}
+      </div>
+
+      <style jsx>{`
+        .itemWrapper {
+          border: 1px solid black;
+          width: 300px;
+        }
+
+        .item {
+          width: 300px;
+        }
+      `}</style>
     </div>
   );
 };
